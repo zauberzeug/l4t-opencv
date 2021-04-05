@@ -1,0 +1,12 @@
+steps:
+- name: build & publish  
+  image: plugins/docker
+  settings:
+    repo: zauberzeug/l4t-opencv
+    build-args:
+     - MAKEFLAGS=-j6
+     - VERSION=4.5.0
+    tags:
+     - latest
+     - 4.5.0-r32.4.4
+
