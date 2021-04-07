@@ -17,4 +17,8 @@ steps:
     tags:
      - latest
      - 4.5.0-r32.4.4-nano
-
+    dry_run: true
+    cache_from:
+      - nvcr.io
+      - zauberzeug/l4t-opencv
+    daemon_off: true
