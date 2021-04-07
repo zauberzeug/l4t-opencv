@@ -7,18 +7,15 @@ platform:
   arch: arm64
 
 steps:
-- name: build & publish  
-  image: plugins/docker
-  settings:
-    repo: zauberzeug/l4t-opencv
-    build_args:
-     - MAKEFLAGS=-j6
-     - VERSION=4.5.0
-    tags:
-     - latest
-     - 4.5.0-r32.4.4-nano
-    dry_run: true
-    cache_from:
-      - nvcr.io
-      - zauberzeug/l4t-opencv
-    daemon_off: true
+  - name: build & publish  
+    image: docker
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    commands:
+      - "docker build --build-arg MAKEFLAGS=-j6 --build-arg VERSION=4.5.0 -t l4t-opencv:test ."
+
+volumes:
+- name: docker_sock
+  host:
+    path: /var/run/docker.sock
