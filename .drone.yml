@@ -15,12 +15,16 @@ steps:
     commands:
       - "docker build --build-arg MAKEFLAGS=-j6 --build-arg OPENCV_VERSION=4.5.0 -t l4t-opencv:4.5.0-on-nano-r32.4.4 ."
 
-    - name: publish  
+  - name: publish  
     image: docker
+    environment:
+      PASSWORD:
+        from_secret: zauberzeug_docker_password
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
     commands:
+      - "docker -D login -u zauberzeug -p '$${PASSWORD}'"
       - "docker push l4t-opencv:4.5.0-on-nano-r32.4.4"
 
 volumes:
