@@ -6,7 +6,6 @@ ENV CUDA_HOME="/usr/local/cuda"
 ENV PATH="/usr/local/cuda/bin:${PATH}"
 ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
 ENV LLVM_CONFIG="/usr/bin/llvm-config-9"
-ARG MAKEFLAGS
 
 ENV TZ=Europe/Berlin
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
@@ -77,24 +76,23 @@ RUN apt -y autoremove
 
 RUN python3 -m pip install numpy
 
-ARG VERSION
+ARG OPENCV_VERSION
+ARG MAKEFLAGS
 
 WORKDIR /root
 
-RUN curl -L https://github.com/opencv/opencv/archive/${VERSION}.zip -o opencv-${VERSION}.zip && \
-    curl -L https://github.com/opencv/opencv_contrib/archive/${VERSION}.zip -o opencv_contrib-${VERSION}.zip && \
-    unzip opencv-${VERSION}.zip && \
-    unzip opencv_contrib-${VERSION}.zip && \
-    cd opencv-${VERSION}/ && \
-    mkdir build && cd build && \
+RUN curl -L https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip -o opencv-${OPENCV_VERSION}.zip && \
+    curl -L https://github.com/opencv/opencv_contrib/archive/${OPENCV_VERSION}.zip -o opencv_contrib-${OPENCV_VERSION}.zip && \
+    unzip opencv-${OPENCV_VERSION}.zip && \
+    unzip opencv_contrib-${OPENCV_VERSION}.zip
+       
+RUN cd opencv-${OPENCV_VERSION}/ && mkdir build && cd build && \
+    cmake -D WITH_CUDA=ON -D WITH_CUDNN=ON -D CUDA_ARCH_BIN="5.3,6.2,7.2" -D CUDA_ARCH_PTX="" -D OPENCV_GENERATE_PKGCONFIG=ON -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib-${OPENCV_VERSION}/modules -D WITH_GSTREAMER=ON -D WITH_LIBV4L=ON -D BUILD_opencv_python2=ON -D BUILD_opencv_python3=ON -D BUILD_TESTS=OFF -D BUILD_PERF_TESTS=OFF -D BUILD_EXAMPLES=OFF -D CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda-10.2 -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local .. && \
+    make $MAKEFLAGS && make install
 
-
-RUN cmake -D WITH_CUDA=ON -D WITH_CUDNN=ON -D CUDA_ARCH_BIN="5.3,6.2,7.2" -D CUDA_ARCH_PTX="" -D OPENCV_GENERATE_PKGCONFIG=ON -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib-*/modules -D WITH_GSTREAMER=ON -D WITH_LIBV4L=ON -D BUILD_opencv_python2=ON -D BUILD_opencv_python3=ON -D BUILD_TESTS=OFF -D BUILD_PERF_TESTS=OFF -D BUILD_EXAMPLES=OFF -D CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda-10.2 -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local .. && \
-
-RUN make $MAKEFLAGS && make install
-
+# cleanup build files to reduce container size
 RUN rm -r opencv*
 
-RUN bash -c 'echo -e Finished installation of opencv.'
+RUN bash
 
 
