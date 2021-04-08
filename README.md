@@ -9,7 +9,7 @@ Docker image which provides openCV 4.5.0 for Jetson (Linux for Tegra, l4t).
 Most of the time you will use this image as base for your own Dockerfile:
 
 ```
-FROM zauberzeug/l4t-opencv:4.5.0-r32.4.4
+FROM zauberzeug/l4t-opencv:4.5.0-on-nano-r32.4.4
 
 ...
 ```
@@ -17,7 +17,7 @@ FROM zauberzeug/l4t-opencv:4.5.0-r32.4.4
 ## Docker Run
 
 ```
-$ docker run --rm -it --runtime=nvidia -e NVIDIA_VISIBLE_DEVICES=all zauberzeug/l4t-opencv:4.5.0-r32.4.4 bash
+$ docker run --rm -it --runtime=nvidia -e NVIDIA_VISIBLE_DEVICES=all zauberzeug/l4t-opencv:4.5.0-on-nano-r32.4.4 bash
 ```
 
 ## Docker Compose
@@ -27,7 +27,7 @@ version: "3.3"
 
 services:
   opencv:
-    image: "zauberzeug/l4t-opencv:4.5.0-r32.4.4"
+    image: "zauberzeug/l4t-opencv:4.5.0-on-nano-r32.4.4"
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
     command: "/bin/bash"
@@ -44,5 +44,5 @@ services:
 We use drone to automatically build this image. If you want to do it by hand, execute
 
 ```
-docker build --build-arg MAKEFLAGS=-j6 --build-arg VERSION=4.5.0 -t l4t-opencv:test .
+docker build --build-arg MAKEFLAGS=-j6 --build-arg OPENCV_VERSION=4.5.0 -t l4t-opencv:latest .
 ```
