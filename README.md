@@ -1,6 +1,9 @@
 # l4t-opencv
 
-Docker image which provides openCV 4.5.0 for Jetson (Linux for Tegra, l4t).
+OpenCV 4.5.0 for Jetson (Linux for Tegra, l4t) with Docker.
+
+Code: https://github.com/zauberzeug/l4t-opencv
+Image: https://hub.docker.com/repository/docker/zauberzeug/l4t-opencv
 
 # Usage
 
