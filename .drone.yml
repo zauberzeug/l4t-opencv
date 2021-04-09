@@ -36,6 +36,15 @@ steps:
       PUSHRM_TARGET: zauberzeug/l4t-opencv
       PUSHRM_SHORT: OpenCV 4.5.0 for Jetson (Linux for Tegra, l4t) with Docker.
 
+  - name: slack
+    image: plugins/slack:1.3.0
+    settings:
+      webhook:
+          from_secret: deeplearning_slack_webhook
+    when:
+      status:
+      - failure
+
 volumes:
 - name: docker_sock
   host:
