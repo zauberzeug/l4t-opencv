@@ -1,6 +1,6 @@
 # l4t-opencv
 
-OpenCV 4.5.0 for Jetson (Linux for Tegra, l4t) with Docker.
+OpenCV 4.5.2 for Jetson (Linux for Tegra, l4t) with Docker.
 
 Code: https://github.com/zauberzeug/l4t-opencv
 
@@ -12,16 +12,16 @@ Image: https://hub.docker.com/repository/docker/zauberzeug/l4t-opencv
 
 Most of the time you will use this image as base for your own Dockerfile:
 
-```
-FROM zauberzeug/l4t-opencv:4.5.0-on-nano-r32.4.4
+```dockerfile
+FROM zauberzeug/l4t-opencv:4.5.2-on-nano-r32.5.0
 
 ...
 ```
 
 ## Docker Run
 
-```
-$ docker run --rm -it --runtime=nvidia -e NVIDIA_VISIBLE_DEVICES=all zauberzeug/l4t-opencv:4.5.0-on-nano-r32.4.4 bash
+```bash
+docker run --rm -it --runtime=nvidia -e NVIDIA_VISIBLE_DEVICES=all zauberzeug/l4t-opencv:4.5.2-on-nano-r32.5.0 
 ```
 
 ## Docker Compose
@@ -31,7 +31,7 @@ version: "3.3"
 
 services:
   opencv:
-    image: "zauberzeug/l4t-opencv:4.5.0-on-nano-r32.4.4"
+    image: "zauberzeug/l4t-opencv:4.5.2-on-nano-r32.5.0"
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
     command: "/bin/bash"
@@ -45,8 +45,23 @@ services:
 
 # Build
 
-We use drone to automatically build this image. If you want to do it by hand, execute
+On an Jetson with l4t r32 5.0 or 5.1, execute
 
 ```
-docker build --build-arg MAKEFLAGS=-j6 --build-arg OPENCV_VERSION=4.5.0 -t l4t-opencv:latest .
+docker build --build-arg MAKEFLAGS=-j6 --build-arg OPENCV_VERSION=4.5.2 -t l4t-opencv:4.5.2-on-nano-r32.5.0 .
+```
+
+Make sure you have nvidia as the default runtime in `/etc/docker/daemon.json`:
+
+```json
+{
+  "runtimes": {
+    "nvidia": {
+      "path": "nvidia-container-runtime",
+      "runtimeArgs": []
+    }
+  },
+
+  "default-runtime": "nvidia"
+}
 ```

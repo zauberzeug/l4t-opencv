@@ -1,4 +1,4 @@
-FROM nvcr.io/nvidia/l4t-base:r32.4.4
+FROM nvcr.io/nvidia/l4t-base:r32.5.0 as builder
 
 # Source: https://github.com/dusty-nv/jetson-containers/blob/master/Dockerfile.ml 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -64,17 +64,16 @@ RUN apt-get update && \
     libprotoc-dev \
     llvm-9 \
     llvm-9-dev \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
+    && apt-get -y purge *libopencv* \
+    && apt -y autoremove \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN ln -sf /usr/bin/python3.6 /usr/bin/python3 && ln -sf /usr/bin/python3.6 /usr/bin/python
 
-#Remove existing opencv
-RUN apt-get -y purge *libopencv*
-
-RUN apt -y autoremove
-
 RUN python3 -m pip install numpy
+
+RUN python -m pip install numpy
 
 ARG OPENCV_VERSION
 ARG MAKEFLAGS
@@ -84,11 +83,20 @@ WORKDIR /root
 RUN curl -L https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip -o opencv-${OPENCV_VERSION}.zip && \
     curl -L https://github.com/opencv/opencv_contrib/archive/${OPENCV_VERSION}.zip -o opencv_contrib-${OPENCV_VERSION}.zip && \
     unzip opencv-${OPENCV_VERSION}.zip && \
-    unzip opencv_contrib-${OPENCV_VERSION}.zip && \
-    cd opencv-${OPENCV_VERSION}/ && mkdir build && cd build && \
-    cmake -D WITH_CUDA=ON -D WITH_CUDNN=ON -D CUDA_ARCH_BIN="5.3,6.2,7.2" -D CUDA_ARCH_PTX="" -D OPENCV_GENERATE_PKGCONFIG=ON -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib-${OPENCV_VERSION}/modules -D WITH_GSTREAMER=ON -D WITH_LIBV4L=ON -D BUILD_opencv_python2=ON -D BUILD_opencv_python3=ON -D BUILD_TESTS=OFF -D BUILD_PERF_TESTS=OFF -D BUILD_EXAMPLES=OFF -D CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda-10.2 -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local .. && \
-    make $MAKEFLAGS && make install && \
-    # cleanup build files to reduce container size
-    RUN rm -r opencv*
+    unzip opencv_contrib-${OPENCV_VERSION}.zip
 
-RUN bash
+WORKDIR /root/opencv-${OPENCV_VERSION}/build
+
+RUN cmake -D WITH_VTK=OFF -D BUILD_opencv_viz=OFF -DWITH_QT=OFF -DWITH_GTK=OFF -D WITH_CUDA=ON -D WITH_CUDNN=ON -D CUDA_ARCH_BIN="5.3,6.2,7.2" -D CUDA_ARCH_PTX="" -D OPENCV_GENERATE_PKGCONFIG=ON -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib-${OPENCV_VERSION}/modules -D WITH_GSTREAMER=ON -D WITH_LIBV4L=ON -D BUILD_opencv_python2=OFF -D BUILD_opencv_python3=ON -D BUILD_TESTS=OFF -D BUILD_PERF_TESTS=OFF -D BUILD_EXAMPLES=OFF -D CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda-10.2 -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local ..
+
+RUN make $MAKEFLAGS 
+
+RUN make install
+
+CMD bash
+
+# FROM nvcr.io/nvidia/l4t-base:r32.4.4
+
+# WORKDIR /root
+
+# COPY --from=builder
