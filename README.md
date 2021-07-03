@@ -6,9 +6,9 @@ Code: https://github.com/zauberzeug/l4t-opencv
 
 Image: https://hub.docker.com/repository/docker/zauberzeug/l4t-opencv
 
-# Usage
+## Usage
 
-## Dockerfile
+### Dockerfile
 
 Most of the time you will use this image as base for your own Dockerfile:
 
@@ -18,13 +18,13 @@ FROM zauberzeug/l4t-opencv:4.5.2-on-nano-r32.5.0
 ...
 ```
 
-## Docker Run
+### Docker Run
 
 ```bash
 docker run --rm -it --runtime=nvidia -e NVIDIA_VISIBLE_DEVICES=all zauberzeug/l4t-opencv:4.5.2-on-nano-r32.5.0 
 ```
 
-## Docker Compose
+### Docker Compose
 
 ```
 version: "3.3"
@@ -43,7 +43,7 @@ services:
               capabilities: [gpu, utility]
 ```
 
-# Build
+## Build
 
 On an Jetson with l4t r32 5.0 or 5.1, execute
 
@@ -65,3 +65,11 @@ Make sure you have nvidia as the default runtime in `/etc/docker/daemon.json`:
   "default-runtime": "nvidia"
 }
 ```
+
+### ToDos
+
+It would be nice to have it all in a `build.sh` file like https://github.com/dusty-nv/jetson-containers:
+
+ 1. checking runtime
+ 2. determining l4t version
+ 3. ... 
