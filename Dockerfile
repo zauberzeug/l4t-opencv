@@ -1,4 +1,4 @@
-FROM nvcr.io/nvidia/l4t-base:r32.5.0 as builder
+FROM nvcr.io/nvidia/l4t-base:r32.6.1 as builder
 
 # Source: https://github.com/dusty-nv/jetson-containers/blob/master/Dockerfile.ml 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -95,7 +95,7 @@ RUN make install
 
 CMD bash
 
-FROM nvcr.io/nvidia/l4t-base:r32.5.0
+FROM nvcr.io/nvidia/l4t-baser32.6.1
 
 COPY --from=builder /usr/local/opencv /usr/local
 

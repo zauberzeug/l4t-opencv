@@ -13,7 +13,7 @@ Image: https://hub.docker.com/repository/docker/zauberzeug/l4t-opencv
 Most of the time you will use this image as base for your own Dockerfile:
 
 ```dockerfile
-FROM zauberzeug/l4t-opencv:4.5.2-on-nano-r32.5.0
+FROM zauberzeug/l4t-opencv:4.5.2-on-nano-r32.6.1
 
 ...
 ```
@@ -21,7 +21,7 @@ FROM zauberzeug/l4t-opencv:4.5.2-on-nano-r32.5.0
 ### Docker Run
 
 ```bash
-docker run --rm -it --runtime=nvidia -e NVIDIA_VISIBLE_DEVICES=all zauberzeug/l4t-opencv:4.5.2-on-nano-r32.5.0 
+docker run --rm -it --runtime=nvidia -e NVIDIA_VISIBLE_DEVICES=all zauberzeug/l4t-opencv:4.5.2-on-nano-r32.6.1 
 ```
 
 ### Docker Compose
@@ -31,7 +31,7 @@ version: "3.3"
 
 services:
   opencv:
-    image: "zauberzeug/l4t-opencv:4.5.2-on-nano-r32.5.0"
+    image: "zauberzeug/l4t-opencv:4.5.2-on-nano-r32.6.1"
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
     command: "/bin/bash"
@@ -45,10 +45,10 @@ services:
 
 ## Build
 
-On an Jetson with l4t r32 5.0 or 5.1, execute
+On an Jetson with l4t r32.6.1, execute
 
 ```
-docker build --build-arg MAKEFLAGS=-j6 --build-arg OPENCV_VERSION=4.5.2 -t l4t-opencv:4.5.2-on-nano-r32.5.0 .
+docker build --build-arg MAKEFLAGS=-j6 --build-arg OPENCV_VERSION=4.5.2 -t l4t-opencv:4.5.2-on-nano-r32.6.1 .
 ```
 
 Make sure you have nvidia as the default runtime in `/etc/docker/daemon.json`:
