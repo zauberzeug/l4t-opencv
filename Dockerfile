@@ -109,7 +109,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 RUN python3 -m pip install cython numpy
-ENV PYTHONPATH "${PYTHONPATH}:/usr/local/lib/python3.6/dist-packages/
+ENV PYTHONPATH "${PYTHONPATH}:/usr/local/lib/python3.6/dist-packages/"
 
 WORKDIR /root
 
