@@ -13,7 +13,7 @@ steps:
       - name: docker_sock
         path: /var/run/docker.sock
     commands:
-      - "docker build --build-arg MAKEFLAGS=-j6 --build-arg OPENCV_VERSION=4.5.2 -t zauberzeug/l4t-opencv:4.5.2-on-nano-r32.5.0 ."
+      - "docker build --build-arg MAKEFLAGS=-j6 --build-arg OPENCV_VERSION=4.6.0 -t zauberzeug/l4t-opencv:4.6.0-on-nano-r32.5.1 ."
 
   - name: publish  
     image: docker
@@ -25,7 +25,7 @@ steps:
         path: /var/run/docker.sock
     commands:
       - "docker -D login -u zauberzeug -p $PASSWORD"
-      - "docker push zauberzeug/l4t-opencv:4.5.2-on-nano-r32.5.0"
+      - "docker push zauberzeug/l4t-opencv:4.6.0-on-nano-r32.5.1"
 
   - name: readme
     image: chko/docker-pushrm:1
