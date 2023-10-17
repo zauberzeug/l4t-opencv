@@ -1,4 +1,4 @@
-FROM nvcr.io/nvidia/l4t-base:r32.6.1 as builder
+FROM nvcr.io/nvidia/l4t-base:35.4.1 as builder
 
 # Source: https://github.com/dusty-nv/jetson-containers/blob/master/Dockerfile.ml 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -48,8 +48,6 @@ RUN apt-get update && \
     libtiff-dev \
     libv4l-dev \
     v4l-utils \
-    qv4l2 \
-    v4l2ucp \
     libdc1394-22-dev \
 
     libgstreamer1.0-dev \
@@ -57,7 +55,7 @@ RUN apt-get update && \
 
     libgtk2.0-dev \
     libjpeg8-dev \
-    libopenmpi2 \
+    libopenmpi-dev \
     openmpi-bin \
     openmpi-common \
     protobuf-compiler \
@@ -69,7 +67,7 @@ RUN apt-get update && \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN ln -sf /usr/bin/python3.6 /usr/bin/python3 && ln -sf /usr/bin/python3.6 /usr/bin/python
+RUN ln -sf /usr/bin/python3.8 /usr/bin/python3 && ln -sf /usr/bin/python3.8 /usr/bin/python
 
 RUN python3 -m pip install numpy
 
@@ -95,7 +93,7 @@ RUN make install
 
 CMD bash
 
-FROM nvcr.io/nvidia/l4t-baser32.6.1
+FROM nvcr.io/nvidia/l4t-base:35.4.1
 
 COPY --from=builder /usr/local/opencv /usr/local
 
